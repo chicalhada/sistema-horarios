@@ -1,0 +1,19 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Don't rewrite existing files/directories
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    
+    # Route everything through index.php
+    RewriteRule ^(.*)$ index.php [QSA,L]
+</IfModule>
+
+# Security: Prevent directory listing
+Options -Indexes
+
+# Security: Protect sensitive files
+<FilesMatch "\.(env|sqlite|log|ini)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>

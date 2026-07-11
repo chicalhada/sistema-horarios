@@ -1,0 +1,19 @@
+{
+    "name": "estga/sistema-horarios",
+    "description": "Sistema de Horarios com Codigo QR para a ESTGA",
+    "type": "project",
+    "require": {
+        "php": ">=7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "mkdir -p data uploads logs",
+            "chmod 755 data uploads logs"
+        ]
+    }
+}
