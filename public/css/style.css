@@ -1,0 +1,345 @@
+/* ============================================
+   RESET E ESTILOS BASE
+   ============================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-blue: #1a2b5c;
+    --secondary-blue: #2c3e7a;
+    --light-blue: #e8edf5;
+    --accent-green: #27ae60;
+    --accent-red: #e74c3c;
+    --accent-orange: #f39c12;
+    --text-dark: #2c3e50;
+    --text-light: #ffffff;
+    --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --border-radius: 12px;
+    --transition: all 0.3s ease;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f5f7fa;
+    color: var(--text-dark);
+    padding: 16px;
+    padding-bottom: 80px;
+    touch-action: manipulation;
+    overflow-y: auto;
+}
+
+.container {
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+/* ============================================
+   CABEÇALHO
+   ============================================ */
+.header {
+    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+    color: var(--text-light);
+    padding: 20px 16px;
+    border-radius: var(--border-radius);
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+}
+
+.header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.header p {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin-top: 4px;
+}
+
+/* ============================================
+   NAVEGAÇÃO SEMANAL
+   ============================================ */
+.week-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 12px 16px;
+    border-radius: var(--border-radius);
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    touch-action: manipulation;
+}
+
+.week-nav button {
+    background: var(--light-blue);
+    border: none;
+    padding: 12px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--primary-blue);
+    cursor: pointer;
+    touch-action: manipulation;
+    min-height: 44px;
+    min-width: 80px;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: var(--transition);
+}
+
+.week-nav button:active {
+    transform: scale(0.95);
+}
+
+.week-nav .week-label {
+    font-weight: 600;
+    color: var(--primary-blue);
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+/* ============================================
+   CARDS DOS DIAS
+   ============================================ */
+.days-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.day-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 16px;
+    box-shadow: var(--shadow);
+    border-left: 4px solid var(--light-blue);
+    animation: fadeIn 0.3s ease;
+}
+
+.day-card.current-day {
+    border-left: 4px solid var(--accent-green);
+    background: #f8fff8;
+}
+
+.day-card .day-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.day-card .day-name {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--primary-blue);
+}
+
+.day-card .day-date {
+    font-size: 0.85rem;
+    color: #7f8c8d;
+}
+
+.day-card .event-count {
+    background: var(--light-blue);
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    color: var(--primary-blue);
+}
+
+/* ============================================
+   EVENTOS
+   ============================================ */
+.event {
+    padding: 12px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    background: #f8f9fa;
+    border-left: 3px solid var(--light-blue);
+    transition: var(--transition);
+}
+
+.event:last-child {
+    margin-bottom: 0;
+}
+
+.event .event-time {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--primary-blue);
+}
+
+.event .event-name {
+    font-weight: 500;
+    margin: 4px 0;
+}
+
+.event .event-type {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.event.type-horario {
+    border-left-color: var(--primary-blue);
+}
+.event.type-horario .event-type {
+    background: var(--primary-blue);
+    color: white;
+}
+
+.event.type-exame {
+    border-left-color: var(--accent-red);
+}
+.event.type-exame .event-type {
+    background: var(--accent-red);
+    color: white;
+}
+
+.event.type-avaliacao {
+    border-left-color: var(--accent-orange);
+}
+.event.type-avaliacao .event-type {
+    background: var(--accent-orange);
+    color: white;
+}
+
+/* ============================================
+   LISTA DE SALAS
+   ============================================ */
+.rooms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+}
+
+.room-card {
+    background: white;
+    padding: 16px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition);
+    touch-action: manipulation;
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.room-card:active {
+    transform: scale(0.96);
+}
+
+.room-card .room-icon {
+    font-size: 2.5rem;
+    margin-bottom: 8px;
+}
+
+.room-card .room-name {
+    font-weight: 600;
+    color: var(--primary-blue);
+    font-size: 1rem;
+}
+
+.room-card .room-info {
+    font-size: 0.8rem;
+    color: #7f8c8d;
+}
+
+/* ============================================
+   BOTÃO VOLTAR
+   ============================================ */
+.back-button {
+    display: inline-block;
+    padding: 12px 24px;
+    background: var(--light-blue);
+    color: var(--primary-blue);
+    border: none;
+    border-radius: 20px;
+    font-weight: 600;
+    margin-top: 20px;
+    cursor: pointer;
+    touch-action: manipulation;
+    min-height: 44px;
+    font-size: 1rem;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: var(--transition);
+}
+
+.back-button:active {
+    transform: scale(0.95);
+}
+
+/* ============================================
+   ESTADOS
+   ============================================ */
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: var(--primary-blue);
+    font-size: 1.1rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 10px;
+}
+.empty-state p {
+    color: #7f8c8d;
+    font-size: 0.85rem;
+}
+
+/* ============================================
+   PÁGINAS
+   ============================================ */
+.page {
+    display: none;
+}
+.page.active {
+    display: block;
+}
+
+/* ============================================
+   ANIMAÇÕES
+   ============================================ */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   RESPONSIVO
+   ============================================ */
+@media (min-width: 768px) {
+    body {
+        padding: 24px;
+    }
+    .container {
+        max-width: 720px;
+    }
+    .days-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+    .rooms-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    }
+}

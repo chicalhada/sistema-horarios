@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Horários ESTGA</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- ===== PÁGINA 1: LISTA DE SALAS ===== -->
+        <div id="pageRooms" class="page active">
+            <div class="header">
+                <h1>🏫 Salas ESTGA</h1>
+                <p>Toque numa sala para ver o horário</p>
+            </div>
+            <div class="rooms-grid" id="roomsContainer"></div>
+        </div>
+
+        <!-- ===== PÁGINA 2: HORÁRIO ===== -->
+        <div id="pageSchedule" class="page">
+            <div class="header">
+                <h1 id="roomTitle">📍 Sala</h1>
+                <p>Horário da semana</p>
+            </div>
+
+            <div class="week-nav">
+                <button id="prevWeek">← Semana</button>
+                <span class="week-label" id="weekLabel">Carregando...</span>
+                <button id="nextWeek">Semana →</button>
+            </div>
+
+            <div class="days-grid" id="daysContainer">
+                <div class="loading">⏳ A carregar horário...</div>
+            </div>
+
+            <button class="back-button" id="backButton">← Voltar às salas</button>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
