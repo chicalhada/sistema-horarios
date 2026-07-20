@@ -7,20 +7,32 @@
  * tanto pelo script de importação original como pelo painel de
  * administração (upload feito através do browser).
  *
- * Formato do CSV esperado (separador ';'), colunas relevantes:
- *   0  -> module_name
- *   1  -> module_acronym
- *   10 -> room (pode ter várias salas separadas por ',')
- *   12 -> start_time
- *   13 -> end_time
- *   14 -> datas do evento, separadas por ',' (formato YYYY-MM-DD)
- *   15 -> event_title
- *   16 -> event_type
- *   21 -> weekday_num
+ * Formato do CSV esperado (separador ';'), com cabeçalhos:
+ *   ModuleName, ModuleAcronym, Classroom, StartTime, EndTime, Week,
+ *   EventTitle, EventType, WeekdayNum, etc.
+ *
+ * AGORA: Utiliza os nomes das colunas do cabeçalho para identificar
+ *        os campos, em vez de números fixos.
  */
 class CsvImporter
 {
     private SQLite3 $db;
+
+    // Mapeamento dos nomes das colunas (caso o CSV tenha nomes diferentes)
+    private array $columnMap = [
+        'module_name' => 'ModuleName',
+        'module_acronym' => 'ModuleAcronym',
+        'classroom' => 'Classroom',
+        'start_time' => 'StartTime',
+        'end_time' => 'EndTime',
+        'week' => 'Week',
+        'event_title' => 'EventTitle',
+        'event_type' => 'EventType',
+        'weekday_num' => 'WeekdayNum',
+        'num_students' => 'NumStudents',
+        'event_identifier' => 'EventIdentifier',
+        'student_group' => 'StudentGroup',
+    ];
 
     public function __construct(SQLite3 $db)
     {
@@ -60,8 +72,21 @@ class CsvImporter
             rewind($handle);
         }
 
-        // Salta a linha de cabeçalhos
-        fgetcsv($handle, 0, ';', '"', '\\');
+        // ============================================
+        // 🔑 LER CABEÇALHOS E CRIAR MAPEAMENTO
+        // ============================================
+        $headers = fgetcsv($handle, 0, ';', '"', '\\');
+        if (!$headers) {
+            throw new RuntimeException("Não foi possível ler os cabeçalhos do CSV.");
+        }
+
+        // Normalizar nomes dos cabeçalhos (remover espaços, caracteres especiais)
+        $headers = array_map(function ($h) {
+            return trim(preg_replace('/[^a-zA-Z0-9]/', '', $h));
+        }, $headers);
+
+        // Encontrar o índice de cada coluna que precisamos
+        $columnIndexes = $this->getColumnIndexes($headers);
 
         $this->db->exec('BEGIN TRANSACTION');
 
@@ -84,15 +109,16 @@ class CsvImporter
                 continue;
             }
 
-            $moduleName    = trim($row[0] ?? '');
-            $moduleAcronym = trim($row[1] ?? '');
-            $roomField     = trim($row[10] ?? '');
-            $startTime     = trim($row[12] ?? '');
-            $endTime       = trim($row[13] ?? '');
-            $weekString    = trim($row[14] ?? '');
-            $eventTitle    = trim($row[15] ?? '');
-            $eventType     = trim($row[16] ?? 'Horarios');
-            $weekdayNum    = (int) ($row[21] ?? 0);
+            // Usar os índices mapeados para extrair os dados
+            $moduleName    = trim($this->getColumnValue($row, $columnIndexes, 'module_name'));
+            $moduleAcronym = trim($this->getColumnValue($row, $columnIndexes, 'module_acronym'));
+            $roomField     = trim($this->getColumnValue($row, $columnIndexes, 'classroom'));
+            $startTime     = trim($this->getColumnValue($row, $columnIndexes, 'start_time'));
+            $endTime       = trim($this->getColumnValue($row, $columnIndexes, 'end_time'));
+            $weekString    = trim($this->getColumnValue($row, $columnIndexes, 'week'));
+            $eventTitle    = trim($this->getColumnValue($row, $columnIndexes, 'event_title'));
+            $eventType     = trim($this->getColumnValue($row, $columnIndexes, 'event_type'));
+            $weekdayNum    = (int) ($this->getColumnValue($row, $columnIndexes, 'weekday_num'));
 
             if (empty($moduleName) || empty($roomField)) {
                 $skipped++;
@@ -149,5 +175,53 @@ class CsvImporter
             'rows'     => $rowNum,
             'cleared'  => $cleared,
         ];
+    }
+
+    /**
+     * Obtém o índice de cada coluna que precisamos, com base no cabeçalho.
+     *
+     * @param array $headers Array com os nomes das colunas do CSV
+     * @return array Mapeamento: nome_interno => índice
+     * @throws RuntimeException se alguma coluna obrigatória não for encontrada
+     */
+    private function getColumnIndexes(array $headers): array
+    {
+        $indexes = [];
+        $required = ['module_name', 'classroom', 'week']; // Colunas obrigatórias
+        $optional = ['module_acronym', 'start_time', 'end_time', 'event_title', 'event_type', 'weekday_num', 'num_students', 'event_identifier', 'student_group'];
+
+        foreach ($this->columnMap as $internalName => $csvHeaderName) {
+            // Limpar o nome do cabeçalho para comparação
+            $cleanHeaderName = trim(preg_replace('/[^a-zA-Z0-9]/', '', $csvHeaderName));
+            $index = array_search($cleanHeaderName, $headers);
+
+            if ($index !== false) {
+                $indexes[$internalName] = $index;
+            } elseif (in_array($internalName, $required)) {
+                throw new RuntimeException("Coluna obrigatória não encontrada no CSV: {$csvHeaderName}");
+            } else {
+                // Coluna opcional não encontrada - usar valor padrão
+                $indexes[$internalName] = null;
+            }
+        }
+
+        return $indexes;
+    }
+
+    /**
+     * Obtém o valor de uma coluna, com base no índice mapeado.
+     *
+     * @param array $row        A linha do CSV
+     * @param array $indexes   Mapeamento de índices
+     * @param string $column   Nome interno da coluna
+     * @return string O valor da célula, ou string vazia se não existir
+     */
+    private function getColumnValue(array $row, array $indexes, string $column): string
+    {
+        $index = $indexes[$column] ?? null;
+        if ($index === null) {
+            return '';
+        }
+        return $row[$index] ?? '';
     }
 }
