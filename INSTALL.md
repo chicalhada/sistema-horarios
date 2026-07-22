@@ -20,19 +20,15 @@ Antes de iniciar a instalação, confirme que o seu computador possui os seguint
 
 ## 1. Copiar o projeto
 
-Copie a pasta do projeto **sistema-horarios** para a pasta **htdocs** do XAMPP.
+Clone o projeto a partir do GitHub
 
-**Exemplo:**
 
-```text
-C:\xampp\htdocs\sistema-horarios
-```
 
 ---
 
 ## 2. Iniciar o servidor
 
-1. Abra a **Pasta do projeto**.
+1. Dentro da pasta do prjeto, abra a pastas **public**.
 2. Inicie um terminal dentro da mesma 
 3. Utilize o comando **"php -S 0.0.0.0:8000"**
 
@@ -40,13 +36,14 @@ C:\xampp\htdocs\sistema-horarios
 
 ## 3. Executar a aplicação
 
-Abra o navegador de Internet e introduza o seguinte endereço:
+Abra o navegador de Internet e introduza o seguintes endereço:
 
-```text
-http://localhost/sistema-horarios/public
-```
 
-Se a instalação tiver sido realizada corretamente, será apresentada a página inicial da aplicação.
+http://localhost:8000/admin.php -> Página de adiministrador
+http://localhost:8000/room_list.php -> Lista das salas, a partir dela navega-se para os links das salas individuais
+
+
+
 
 ---
 
@@ -74,30 +71,6 @@ sistema-horarios/
 ├── INSTALL.md    → Guia de instalação
 └── TROUBLESHOOTING.md → Resolução de problemas
 ```
-
----
-
-# Verificar a Instalação
-
-Depois de concluir a instalação, confirme que:
-
-* O serviço **Apache** está em execução;
-* O endereço `http://localhost/sistema-horarios/public` abre corretamente a aplicação;
-* A base de dados SQLite foi criada automaticamente;
-* Não são apresentadas mensagens de erro relacionadas com o PHP ou com permissões de acesso.
-
-Se todos estes pontos forem cumpridos, a aplicação encontra-se pronta a ser utilizada.
-
----
-
-# Atualizar a Aplicação
-
-Quando existir uma nova versão da aplicação, siga os seguintes passos:
-
-1. Pare o serviço **Apache** no XAMPP;
-2. Substitua os ficheiros antigos pelos novos;
-3. Mantenha a pasta **data** caso pretenda preservar a base de dados e os dados já existentes;
-4. Inicie novamente o serviço **Apache**.
 
 ---
 
